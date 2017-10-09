@@ -9,7 +9,7 @@
 	fclass char(1),
 	fcode varchar(10),
 	country varchar(2),
-	cc2 varchar(80),
+	cc2 varchar(200),
 	admin1 varchar(20),
 	admin2 varchar(80),
 	admin3 varchar(20),
@@ -21,8 +21,8 @@
 	moddate date
  );
 
- drop table if exists alternatename cascade;
- create table if not exists alternatename (
+ drop table if exists alternatenames cascade;
+ create table if not exists alternatenames (
 	alternatenameId int,
 	geonameid int,
 	isoLanguage varchar(7),
@@ -56,8 +56,8 @@ create table if not exists countryinfo (
 	equivfipscode varchar(3)
 );
 
-drop table if exists postalcode cascade;
-create table if not exists postalcode (
+drop table if exists postalcodes cascade;
+create table if not exists postalcodes (
 	countryCode char(2),
 	postalcode varchar(20),
 	placename varchar(180),
@@ -72,13 +72,7 @@ create table if not exists postalcode (
 	accuracy integer
 );
 
-ALTER TABLE ONLY cities ADD CONSTRAINT pk_geonameid PRIMARY KEY (geonameid);
-ALTER TABLE ONLY alternatename ADD CONSTRAINT pk_alternatenameid PRIMARY KEY (alternatenameid);
-ALTER TABLE ONLY alternatename ADD CONSTRAINT fk_geonameid FOREIGN KEY (geonameid) REFERENCES cities(geonameid);
-ALTER TABLE ONLY countryinfo ADD CONSTRAINT pk_iso_alpha2 PRIMARY KEY (iso_alpha2);
-ALTER TABLE ONLY countryinfo ADD CONSTRAINT fk_geonameid FOREIGN KEY (geonameid) REFERENCES cities(geonameid);
-
 \copy cities (geonameid,name,asciiname,alternatenames,latitude,longitude,fclass,fcode,country,cc2,admin1,admin2,admin3,admin4,population,elevation,gtopo30,timezone,moddate) from './import/cities.txt' null as '';
-\copy alternatename  (alternatenameid,geonameid,isolanguage,alternatename,ispreferredname,isshortname,iscolloquial,ishistoric) from './import/alternateNames.txt' null as '';
+\copy alternatenames  (alternatenameid,geonameid,isolanguage,alternatename,ispreferredname,isshortname,iscolloquial,ishistoric) from './import/alternateNames.txt' null as '';
 \copy countryinfo (iso_alpha2,iso_alpha3,iso_numeric,fips_code,name,capital,areainsqkm,population,continent,tld,currencycode,currencyname,phone,postalcode,postalcoderegex,languages,geonameid,neighbors,equivfipscode) from './import/countryInfo.txt' null as '';
-\copy postalcode (countryCode,postalcode,placename,adminname1,admincode1,adminname2,admincode2,adminname3,admincode3,latitude,longitude,accuracy) from './import/postalCodes.txt' null as '';
+\copy postalcodes (countryCode,postalcode,placename,adminname1,admincode1,adminname2,admincode2,adminname3,admincode3,latitude,longitude,accuracy) from './import/postalCodes.txt' null as '';
