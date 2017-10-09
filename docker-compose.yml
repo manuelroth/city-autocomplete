@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: osm
+      POSTGRES_USER: osm
+      POSTGRES_PASSWORD: osm
+  import-geonames:
+    build: src/import-geonames
+    depends_on:
+     - postgres
+    volumes:
+     - ./data/import:/usr/src/app/import
+  export-city-index:
+    build: src/export-city-index
+    depends_on:
+     - postgres
+    volumes:
+     - ./data/export:/usr/src/app/export
