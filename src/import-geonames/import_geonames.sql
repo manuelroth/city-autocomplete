@@ -77,7 +77,7 @@ create table if not exists postalcodes (
 \copy countryinfo (iso_alpha2,iso_alpha3,iso_numeric,fips_code,name,capital,areainsqkm,population,continent,tld,currencycode,currencyname,phone,postalcode,postalcoderegex,languages,geonameid,neighbors,equivfipscode) from './import/countryInfo.txt' null as '';
 /*\copy postalcodes (countryCode,postalcode,placename,adminname1,admincode1,adminname2,admincode2,adminname3,admincode3,lat,lng,accuracy) from './import/postalCodes.txt' null as '';*/
 
-DELETE FROM geonames WHERE fclass NOT LIKE 'P';
+DELETE FROM geonames WHERE fclass NOT LIKE 'P' OR population < 2000;
 
 CREATE OR REPLACE FUNCTION get_isocode_by_countryname (isocode text ) RETURNS text AS $$
     SELECT name FROM countryinfo where iso_alpha2 LIKE isocode;
