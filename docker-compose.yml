@@ -4,9 +4,9 @@ services:
   postgres:
     image: postgres:10
     environment:
-      POSTGRES_DB: osm
-      POSTGRES_USER: osm
-      POSTGRES_PASSWORD: osm
+      POSTGRES_DB: geonames
+      POSTGRES_USER: geonames
+      POSTGRES_PASSWORD: geonames
   import-geonames:
     build: src/import-geonames
     depends_on:
