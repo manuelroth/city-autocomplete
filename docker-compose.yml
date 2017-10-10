@@ -19,3 +19,11 @@ services:
      - postgres
     volumes:
      - ./data/export:/usr/src/app/export
+  upload-city-index:
+    build: src/upload-city-index
+    volumes:
+     - ./data/export:/usr/src/app/export
+    environment:
+      APP_ID: <replace with your app_id>
+      API_KEY: <replace with your app_key>
+      INDEX_NAME: <replace with your index_name>
