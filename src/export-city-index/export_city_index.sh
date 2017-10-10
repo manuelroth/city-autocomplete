@@ -18,7 +18,7 @@ function export_city_index() {
 }
 
 function cleanup_index_file() {
-  sed -i '.original' 's/#//g' city_index.csv
+  sed -i '.original' 's/#//g' /usr/src/app/export/city_index.csv
 }
 
 function main() {
