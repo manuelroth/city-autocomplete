@@ -77,11 +77,7 @@ create table if not exists postalcodes (
 \copy countryinfo (iso_alpha2,iso_alpha3,iso_numeric,fips_code,name,capital,areainsqkm,population,continent,tld,currencycode,currencyname,phone,postalcode,postalcoderegex,languages,geonameid,neighbors,equivfipscode) from './import/countryInfo.txt' null as '';
 /*\copy postalcodes (countryCode,postalcode,placename,adminname1,admincode1,adminname2,admincode2,adminname3,admincode3,lat,lng,accuracy) from './import/postalCodes.txt' null as '';*/
 
-DROP INDEX IF EXISTS cites_population_index;
-CREATE INDEX cites_population_index ON cities(population);
-
-DROP INDEX IF EXISTS isocode_to_countryname_index;
-CREATE INDEX isocode_to_countryname_index ON cities(get_isocode_by_countryname(country));
+DELETE FROM cities WHERE fclass NOT LIKE 'P';
 
 CREATE OR REPLACE FUNCTION get_isocode_by_countryname (isocode text ) RETURNS text AS $$
     SELECT name FROM countryinfo where iso_alpha2 LIKE isocode;
@@ -90,3 +86,9 @@ $$ LANGUAGE SQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION get_postalcode_by_name (name text ) RETURNS text AS $$
     SELECT postalcode FROM postalcodes where placename LIKE name;
 $$ LANGUAGE SQL IMMUTABLE;
+
+DROP INDEX IF EXISTS cites_population_index;
+CREATE INDEX cites_population_index ON cities(population);
+
+DROP INDEX IF EXISTS isocode_to_countryname_index;
+CREATE INDEX isocode_to_countryname_index ON cities(get_isocode_by_countryname(country));
