@@ -3,17 +3,17 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-readonly OSM_DB=${OSM_DB:-osm}
-readonly OSM_USER=${OSM_USER:-osm}
-readonly OSM_PASSWORD=${OSM_PASSWORD:-osm}
+readonly GEONAMES_DB=${GEONAMES_DB:-geonames}
+readonly GEONAMES_USER=${GEONAMES_USER:-geonames}
+readonly GEONAMES_PASSWORD=${GEONAMES_PASSWORD:-geonames}
 
 
 function export_city_index() {
-  PGPASSWORD="osm" psql \
+  PGPASSWORD="$GEONAMES_PASSWORD" psql \
   --host="postgres" \
   --port="5432" \
-  --dbname="$OSM_DB" \
-  --username="$OSM_USER" \
+  --dbname="$GEONAMES_DB" \
+  --username="$GEONAMES_USER" \
   -a -f "/usr/src/app/export_city_index.sql"
 }
 
