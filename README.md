@@ -42,7 +42,7 @@ docker-compose run --rm download-geonames
 
 This downloads the necessary GeoNames datasets, extracts and places it into the `./data/import` folder -> [Source Code](https://github.com/manuelroth/city-autocomplete/blob/master/src/download-geonames/download_geonames.sh)
 
-3. Now start up the database container (as a deamon process):
+3. Now start up the database container (as a daemon process):
 
 ```bash
 docker-compose up -d postgres
