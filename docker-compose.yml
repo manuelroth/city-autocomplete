@@ -1,6 +1,10 @@
 version: '3'
 
 services:
+  download-geonames:
+    build: src/download-geonames
+    volumes:
+     - ./data/import:/usr/src/app/import
   postgres:
     image: postgres:10
     environment:
