@@ -28,6 +28,6 @@ services:
     volumes:
      - ./data/export:/usr/src/app/export
     environment:
-      APP_ID: <replace with your app_id>
-      API_KEY: <replace with your app_key>
-      INDEX_NAME: <replace with your index_name>
+      APP_ID: <replace with your Algolia app_id>
+      API_KEY: <replace with your Algolia app_key>
+      INDEX_NAME: <replace with your Algolia index_name>
