@@ -68,19 +68,38 @@ CREATE TABLE IF NOT EXISTS postalcodes (
 
 \copy geonames (geonameid,name,asciiname,alternatenames,lat,lng,fclass,fcode,country,cc2,admin1,admin2,admin3,admin4,population,elevation,gtopo30,timezone,moddate) from './import/geonames.txt' null as '';
 \copy countryinfo (iso_alpha2,iso_alpha3,iso_numeric,fips_code,name,capital,areainsqkm,population,continent,tld,currencycode,currencyname,phone,postalcode,postalcoderegex,languages,geonameid,neighbors,equivfipscode) from './import/countryInfo.txt' null as '';
-/*\copy postalcodes (countryCode,postalcode,placename,adminname1,admincode1,adminname2,admincode2,adminname3,admincode3,lat,lng,accuracy) from './import/postalCodes.txt' null as '';*/
+\copy postalcodes (countryCode,postalcode,placename,adminname1,admincode1,adminname2,admincode2,adminname3,admincode3,lat,lng,accuracy) from './import/postalCodes.txt' null as '';
 
 DELETE FROM geonames WHERE fclass NOT LIKE 'P' OR population < 2000;
+DELETE FROM postalcodes WHERE placename IS NULL;
 
 ALTER TABLE ONLY geonames ADD CONSTRAINT pk_geonameid PRIMARY KEY (geonameid);
 ALTER TABLE ONLY countryinfo ADD CONSTRAINT pk_iso_alpha2 PRIMARY KEY (iso_alpha2);
+ALTER TABLE ONLY postalcodes ADD CONSTRAINT pk_lat_lng PRIMARY KEY (postalcode, placename, lat, lng);
 
 CREATE OR REPLACE FUNCTION get_isocode_by_countryname (isocode text ) RETURNS text AS $$
-    SELECT name FROM countryinfo where iso_alpha2 LIKE isocode;
+    SELECT name FROM countryinfo WHERE iso_alpha2 LIKE isocode;
 $$ LANGUAGE SQL IMMUTABLE;
 
-CREATE OR REPLACE FUNCTION get_postalcode_by_name (name text ) RETURNS text AS $$
-    SELECT postalcode FROM postalcodes where placename LIKE name;
+CREATE OR REPLACE FUNCTION get_postalcodes (admin1 varchar(20), admin2 varchar(20), admin3 varchar(20), name varchar(200) ) RETURNS text AS $$
+    SELECT string_agg(postalcode, ', ')
+	FROM postalcodes
+	WHERE (
+		admincode1 LIKE admin1
+		AND admincode2 LIKE admin2
+		AND admincode3 LIKE admin3
+		AND placename LIKE name
+	) OR (
+		admincode1 LIKE admin1
+		AND admincode2 LIKE admin2
+		AND placename LIKE name
+	) OR (
+		admincode1 LIKE admin1
+		AND placename LIKE name
+	) OR (
+		placename LIKE name
+	)
+	GROUP BY placename;
 $$ LANGUAGE SQL IMMUTABLE;
 
 DROP INDEX IF EXISTS isocode_to_countryname_index;
