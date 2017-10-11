@@ -75,7 +75,6 @@ DELETE FROM postalcodes WHERE placename IS NULL;
 
 ALTER TABLE ONLY geonames ADD CONSTRAINT pk_geonameid PRIMARY KEY (geonameid);
 ALTER TABLE ONLY countryinfo ADD CONSTRAINT pk_iso_alpha2 PRIMARY KEY (iso_alpha2);
-ALTER TABLE ONLY postalcodes ADD CONSTRAINT pk_lat_lng PRIMARY KEY (postalcode, placename, lat, lng);
 
 CREATE OR REPLACE FUNCTION get_isocode_by_countryname (isocode text ) RETURNS text AS $$
     SELECT name FROM countryinfo WHERE iso_alpha2 LIKE isocode;
@@ -104,3 +103,6 @@ $$ LANGUAGE SQL IMMUTABLE;
 
 DROP INDEX IF EXISTS isocode_to_countryname_index;
 CREATE INDEX isocode_to_countryname_index ON geonames(get_isocode_by_countryname(country));
+
+DROP INDEX IF EXISTS placename_index;
++CREATE INDEX placename_index ON postalcodes(placename);
