@@ -105,4 +105,4 @@ DROP INDEX IF EXISTS isocode_to_countryname_index;
 CREATE INDEX isocode_to_countryname_index ON geonames(get_isocode_by_countryname(country));
 
 DROP INDEX IF EXISTS placename_index;
-+CREATE INDEX placename_index ON postalcodes(placename);
+CREATE INDEX placename_index ON postalcodes(placename);
