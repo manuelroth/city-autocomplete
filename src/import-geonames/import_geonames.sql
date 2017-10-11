@@ -1,5 +1,11 @@
- drop table if exists geonames cascade;
- create table if not exists geonames (
+/* Adjust database configuration to workload (based on pgtune - http://pgtune.leopard.in.ua/) */
+ALTER SYSTEM SET min_wal_size = '4GB';
+ALTER SYSTEM SET max_wal_size = '8GB';
+ALTER SYSTEM SET checkpoint_completion_target = 0.9;
+SELECT pg_reload_conf();
+
+DROP TABLE IF EXISTS geonames;
+CREATE TABLE IF NOT EXISTS geonames (
 	geonameid	int,
 	name varchar(200),
 	asciiname varchar(200),
@@ -19,10 +25,10 @@
 	gtopo30 int,
 	timezone varchar(40),
 	moddate date
- );
+);
 
- drop table if exists alternatenames cascade;
- create table if not exists alternatenames (
+DROP TABLE IF EXISTS alternatenames;
+CREATE TABLE IF NOT EXISTS alternatenames (
 	alternatenameId int,
 	geonameid int,
 	isoLanguage varchar(7),
@@ -31,10 +37,10 @@
 	isShortName boolean,
 	isColloquial boolean,
 	isHistoric boolean
- );
+);
 
-drop table if exists countryinfo cascade;
-create table if not exists countryinfo (
+DROP TABLE IF EXISTS countryinfo;
+CREATE TABLE IF NOT EXISTS countryinfo (
 	iso_alpha2 char(2),
 	iso_alpha3 char(3),
 	iso_numeric integer,
@@ -50,14 +56,14 @@ create table if not exists countryinfo (
 	phone varchar(20),
 	postalcode varchar(100),
 	postalcoderegex varchar(200),
-    languages varchar(200),
-    geonameId int,
+	languages varchar(200),
+	geonameId int,
 	neighbors varchar(50),
 	equivfipscode varchar(3)
 );
 
-drop table if exists postalcodes cascade;
-create table if not exists postalcodes (
+DROP TABLE IF EXISTS postalcodes;
+CREATE TABLE IF NOT EXISTS postalcodes (
 	countryCode char(2),
 	postalcode varchar(20),
 	placename varchar(180),
