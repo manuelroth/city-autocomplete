@@ -13,6 +13,8 @@ function prepare_geonames() {
 function prepare_postalcodes() {
     wget -O postalCodes.zip http://download.geonames.org/export/zip/allCountries.zip
     unzip postalCodes.zip
+    sed -i .backup 's/\\//g' allCountries.txt
+    rm allCountries.txt.backup
     mv allCountries.txt ./import/postalCodes.txt
     rm postalCodes.zip
 }
