@@ -27,18 +27,6 @@ CREATE TABLE IF NOT EXISTS geonames (
 	moddate date
 );
 
-DROP TABLE IF EXISTS alternatenames;
-CREATE TABLE IF NOT EXISTS alternatenames (
-	alternatenameId int,
-	geonameid int,
-	isoLanguage varchar(7),
-	alternateName varchar(200),
-	isPreferredName boolean,
-	isShortName boolean,
-	isColloquial boolean,
-	isHistoric boolean
-);
-
 DROP TABLE IF EXISTS countryinfo;
 CREATE TABLE IF NOT EXISTS countryinfo (
 	iso_alpha2 char(2),
@@ -79,11 +67,13 @@ CREATE TABLE IF NOT EXISTS postalcodes (
 );
 
 \copy geonames (geonameid,name,asciiname,alternatenames,lat,lng,fclass,fcode,country,cc2,admin1,admin2,admin3,admin4,population,elevation,gtopo30,timezone,moddate) from './import/geonames.txt' null as '';
-\copy alternatenames (alternatenameid,geonameid,isolanguage,alternatename,ispreferredname,isshortname,iscolloquial,ishistoric) from './import/alternateNames.txt' null as '';
 \copy countryinfo (iso_alpha2,iso_alpha3,iso_numeric,fips_code,name,capital,areainsqkm,population,continent,tld,currencycode,currencyname,phone,postalcode,postalcoderegex,languages,geonameid,neighbors,equivfipscode) from './import/countryInfo.txt' null as '';
 /*\copy postalcodes (countryCode,postalcode,placename,adminname1,admincode1,adminname2,admincode2,adminname3,admincode3,lat,lng,accuracy) from './import/postalCodes.txt' null as '';*/
 
 DELETE FROM geonames WHERE fclass NOT LIKE 'P' OR population < 2000;
+
+ALTER TABLE ONLY geonames ADD CONSTRAINT pk_geonameid PRIMARY KEY (geonameid);
+ALTER TABLE ONLY countryinfo ADD CONSTRAINT pk_iso_alpha2 PRIMARY KEY (iso_alpha2);
 
 CREATE OR REPLACE FUNCTION get_isocode_by_countryname (isocode text ) RETURNS text AS $$
     SELECT name FROM countryinfo where iso_alpha2 LIKE isocode;
@@ -92,9 +82,6 @@ $$ LANGUAGE SQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION get_postalcode_by_name (name text ) RETURNS text AS $$
     SELECT postalcode FROM postalcodes where placename LIKE name;
 $$ LANGUAGE SQL IMMUTABLE;
-
-DROP INDEX IF EXISTS geonames_population_index;
-CREATE INDEX geonames_population_index ON geonames(population);
 
 DROP INDEX IF EXISTS isocode_to_countryname_index;
 CREATE INDEX isocode_to_countryname_index ON geonames(get_isocode_by_countryname(country));
