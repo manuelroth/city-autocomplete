@@ -1,5 +1,5 @@
 ## City Autocomplete
-A city autocomplete menu using the GeoNames datasets and the Algolia search engine
+A city autocomplete menu using the [GeoNames](http://www.geonames.org/) datasets and the [Algolia](https://www.algolia.com/) search engine
 
 ### Implementation
 
@@ -20,7 +20,7 @@ The exported file `./data/export/city_index.csv` contains the following columns:
 | lng              | longitude in decimal degrees (wgs84)            |
 
 ### Usage
-The process is built with [Docker](https://www.docker.com/). Specifically, it is built with [Docker Compose](https://docs.docker.com/compose/) thus allowing to define a multi-container architecture defined in [a single file](https://github.com/manuelroth/city-autocomplete/blob/master/docker-compose.yml). To run through the city index generation process both need to be installed:
+The data processing pipline is built with [Docker](https://www.docker.com/). Specifically, it is built with [Docker Compose](https://docs.docker.com/compose/) thus allowing to define a multi-container architecture defined in [a single file](https://github.com/manuelroth/city-autocomplete/blob/master/docker-compose.yml). To run through the city index generation process both need to be installed:
 
 - Install [Docker](https://docs.docker.com/engine/installation/)
 - Install [Docker Compose](https://docs.docker.com/compose/install/)
@@ -70,7 +70,7 @@ This generates the city index and saves it as CSV-file in the `./data/export` fo
 docker-compose run --rm upload-city-index
 ```
 
-In order for this to work the environment variables `APP_ID`, `API_KEY` and `INDEX_NAME` in the `docker-compose.yml` file need to updated accordingly -> [Source Code](https://github.com/manuelroth/city-autocomplete/blob/master/src/upload-city-index/Dockerfile)
+Befor uploading the city-index the environment variables `APP_ID`, `API_KEY` and `INDEX_NAME` in the [docker-compose.yml](https://github.com/manuelroth/city-autocomplete/blob/master/docker-compose.yml#L30) file need to be updated -> [Source Code](https://github.com/manuelroth/city-autocomplete/blob/master/src/upload-city-index/Dockerfile)
 
 ```bash
 environment:
