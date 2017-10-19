@@ -11,11 +11,11 @@ The exported file `./data/export/city_index.csv` contains the following columns:
 
 | Column name      | Description                                     |
 |------------------|-------------------------------------------------|
-| name             | The name of the city (utf8)                     |
-| altenative_names | The alternate names (comma separated)           |
-| country          | The name of the country                         |
-| postalcodes      | The postalcode(s) (comma separated if multiple) |
-| population       | The population of the city                      |
+| name             | The city name (utf8)                            |
+| alternatenames   | The alternate names (comma separated)           |
+| country          | The country name                                |
+| postalcodes      | The postalcode(s) (comma separated)             |
+| population       | The city population                             |
 | lat              | latitude in decimal degrees (wgs84)             |
 | lng              | longitude in decimal degrees (wgs84)            |
 
