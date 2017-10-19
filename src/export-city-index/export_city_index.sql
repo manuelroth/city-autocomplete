@@ -1,13 +1,2 @@
-/* Export data without postalcodes */
-\COPY ( SELECT name, alternatenames AS alternative_names, get_isocode_by_countryname(country) AS country, population, lat, lng FROM geonames ) TO ./export/city_index.csv WITH (FORMAT csv, HEADER true);
-
-/* Export data with postalcodes
-\COPY (
-SELECT name, alternatenames AS alternative_names,
-get_isocode_by_countryname(country) AS country,
-get_postalcodes(admin1, admin2, admin3, name) AS postalcodes,
-population, lat, lng
-FROM geonames
-) TO ./export/city_index.csv
-WITH (FORMAT csv, HEADER true);
-*/
+/* Export data */
+\COPY ( SELECT g.name, g.alternatenames, c.name AS country, p.postalcodes, g.population, g.lat, g.lng FROM geonames g LEFT JOIN countryinfo c ON g.country = c.iso_alpha2 LEFT JOIN agg_postalcodes p ON g.geonameid = p.geonameid ) TO ./export/city_index.csv WITH (FORMAT csv, HEADER true);
