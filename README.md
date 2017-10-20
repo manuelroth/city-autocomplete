@@ -9,15 +9,15 @@ This repository contains a process to generate a city index based on the [GeoNam
 
 The exported file `./data/export/city_index.csv` contains the following columns:
 
-| Column name      | Description                                     |
-|------------------|-------------------------------------------------|
-| name             | The city name (utf8)                            |
-| alternatenames   | The alternate names (comma separated)           |
-| country          | The country name                                |
-| postalcodes      | The postalcode(s) (comma separated)             |
-| population       | The city population                             |
-| lat              | latitude in decimal degrees (wgs84)             |
-| lng              | longitude in decimal degrees (wgs84)            |
+| Column name    | Description                           | GeoNames Table |
+|----------------|---------------------------------------|----------------|
+| name           | The city name (utf8)                  | geoname        |
+| alternatenames | The alternate names (comma separated) | geoname        |
+| country        | The country name                      | countryInfo    |
+| postalcodes    | The postalcode(s) (comma separated)   | postalcodes    |
+| population     | The city population                   | geoname        |
+| lat            | latitude in decimal degrees (wgs84)   | geoname        |
+| lng            | longitude in decimal degrees (wgs84)  | geoname        |
 
 ### Usage
 The data processing pipline is built with [Docker](https://www.docker.com/). Specifically, it is built with [Docker Compose](https://docs.docker.com/compose/) thus allowing to define a multi-container architecture defined in [a single file](https://github.com/manuelroth/city-autocomplete/blob/master/docker-compose.yml). To run through the city index generation process both need to be installed:
@@ -78,3 +78,14 @@ environment:
     API_KEY: <replace with your Algolia app_key>
     INDEX_NAME: <replace with your Algolia index_name>
 ```
+### Used GeoNames datasets and relations between tabels
+
+The city index contains data of different GeoNames datasets ([Place data of all countries](http://download.geonames.org/export/dump/allCountries.zip), [Postalcodes of all countries](http://download.geonames.org/export/zip/allCountries.zip) and the [Country Info](http://download.geonames.org/export/dump/countryInfo.txt)). In order to combine the different datasets, a relation between them needs to be established. Datasets usually use id's for that purpose, but many times there are no id's which help to link the datasets. Therefore other methodes need to be applied.
+
+For both the countryInfo and the postalcodes dataset I decided to link the dataset using one or multiple columns which have the same values. This works very well if the datasets are complete and there is enough information to be able to create a correct match between the tables.
+
+This approach worked very well to create a relation between the geonames and the countryInfo tables. The country code column of both tables is complete. So the strings can be matched and a relation is established.
+
+However the same approach did not work as seamless with the geonames and postalcodes tables. Both tables have columns for the city name, country code, 1. administrative division (state), 2. adm. division (county/province), 3. adm. division (community), latitude and longitude fields. As with every dataset, the geonames dataset is not perfect. There are many rows which do not have data for all the columns. Therefore it was not possible to use all the columns to create a relation between the two tables.
+
+With manual testing I found out that in most cases it is suitable to create a relation using the country code, 1. administrative division (state) and the city name between the tables. These are the minimal required fields. Otherwise postalcodes get related to the wrong citys. The current solution is not perfect yet and should be further improved in the future.
