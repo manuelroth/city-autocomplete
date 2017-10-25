@@ -1,4 +1,4 @@
-## City Autocomplete
+## City Autocomplete [![Build Status](https://travis-ci.org/manuelroth/city-autocomplete.svg?branch=master)](https://travis-ci.org/manuelroth/city-autocomplete)
 A city autocomplete menu using the [GeoNames](http://www.geonames.org/) datasets and the [Algolia](https://www.algolia.com/) search engine
 
 ### Implementation

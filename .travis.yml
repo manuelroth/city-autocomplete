@@ -1,0 +1,12 @@
+sudo: required
+
+language: ruby
+
+services:
+  - docker
+
+script:
+- docker-compose run --rm download-geonames
+- docker-compose up -d postgres
+- docker-compose run --rm import-geonames
+- docker-compose run --rm export-city-index
