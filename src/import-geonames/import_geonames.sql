@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS postalcodes (
 \COPY countryinfo (iso_alpha2,iso_alpha3,iso_numeric,fips_code,name,capital,areainsqkm,population,continent,tld,currencycode,currencyname,phone,postalcode,postalcoderegex,languages,geonameid,neighbors,equivfipscode) FROM './import/countryInfo.txt' NULL AS '';
 \COPY postalcodes (countryCode,postalcode,placename,adminname1,admincode1,adminname2,admincode2,adminname3,admincode3,lat,lng,accuracy) FROM './import/postalCodes.txt' NULL AS '';
 
-/* Drop all geoname rows which are not tagged as a populated places or have a population lower than 2000 citizens */
+/* Drop all geoname rows which are not tagged as populated places or have a population lower than 2000 citizens */
 DELETE FROM geonames WHERE fclass NOT LIKE 'P' OR population < 2000;
 
 /* Create indices on important fields */
@@ -80,9 +80,11 @@ DROP INDEX IF EXISTS postalcodes_index;
 CREATE INDEX postalcodes_index ON postalcodes(placename, countryCode, admincode1);
 DROP INDEX IF EXISTS geonames_index;
 CREATE INDEX geonames_index ON geonames(name, country, admin1);
+
+/* Collect statistics about the contents of tables after import */
 ANALYZE;
 
-/* Create amaterialized view with all postalcodes which have a corresponding row in the geonames table */
+/* Create a materialized view with all postalcodes which have a corresponding row in the geonames table */
 DROP MATERIALIZED VIEW existing_postalcodes;
 CREATE MATERIALIZED VIEW existing_postalcodes AS
 SELECT g.geonameid, p.postalcode FROM postalcodes p, geonames g

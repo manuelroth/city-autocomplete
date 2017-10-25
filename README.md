@@ -70,7 +70,7 @@ This generates the city index and saves it as CSV-file in the `./data/export` fo
 docker-compose run --rm upload-city-index
 ```
 
-Befor uploading the city-index the environment variables `APP_ID`, `API_KEY` and `INDEX_NAME` in the [docker-compose.yml](https://github.com/manuelroth/city-autocomplete/blob/master/docker-compose.yml#L30) file need to be updated -> [Source Code](https://github.com/manuelroth/city-autocomplete/blob/master/src/upload-city-index/Dockerfile)
+Before uploading the city-index the environment variables `APP_ID`, `API_KEY` and `INDEX_NAME` in the [docker-compose.yml](https://github.com/manuelroth/city-autocomplete/blob/master/docker-compose.yml#L30) file need to be updated -> [Source Code](https://github.com/manuelroth/city-autocomplete/blob/master/src/upload-city-index/Dockerfile)
 
 ```bash
 environment:
